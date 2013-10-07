@@ -26,8 +26,8 @@ def add_media(_id, xml, img_type):
     url = None
     for tag in soup.findAll('thumb'):
         url = tag.text
-        if 'htbackdrops' in url:
-            # htbackdrops doesn't exist any more, ignore
+        if 'htbackdrops.com' in url:
+            # htbackdrops.com is down, ignore
             continue
         elif not url:
             continue
