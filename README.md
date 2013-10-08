@@ -46,11 +46,13 @@ This can massively improve the artwork coverage in your music collection.
 
 #### The Problem
 
-You've just retagged some albums, improving their metadata. You update the music library on XBMC and suddenly these albums are at the top of your "Recently added" list, even though you've had the albums for ages. 
+Albums are ordered in XBMC by the time at which they were added to XBMC. So, when you first scan your music library, your "Recently Added" music will be comprised of music beginning with the letter 'Z', since that's the last stuff scanned in to XBMC. 
 
-This script re-orders entries in the database based on the age of each album's folder. 
+Similarly, if you retag some albums and update your music library on XBMC, the retagged albums will suddenly jump to the top of the "Recently Added" playlist, even though you've had the albums for a long time.
 
-One possible problem point: if songs belonging to more than one album are found in the same directory, the directory will be ignored and its albums will not be re-ordered. These albums will therefore be marked as some of the oldest in the XBMC database. This shouldn't be a problem if you have a well-organised music library.
+This script re-orders entries in the database based on the age of each album's folder. After running the script, your albums in the XBMC library will be in the order in which you _actually_ added them to your hard disk.
+
+There is however one possible problem point: if songs belonging to more than one album are found in the same directory, the directory will be ignored and its albums will not be re-ordered. These albums will therefore be marked as some of the oldest in the XBMC database. This shouldn't be a problem if you have a well-organised music library.
 
 #### Configuration and execution
 
