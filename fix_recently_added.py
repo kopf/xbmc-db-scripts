@@ -59,7 +59,7 @@ def execute():
             sql = 'update {table} set idAlbum={new} where idAlbum={old};'
             db.perform_sql(sql.format(table=table, new=new_id,
                                       old=strPath_album_ids[0]))
-        sql = 'update {table} set media_id={new} where media_id={old};'
+        sql = 'update {table} set media_id={new} where media_id={old} and media_type="album";'
         db.perform_sql(sql.format(table='art', new=new_id,
                                   old=strPath_album_ids[0]))
         if i % 100 == 0:
