@@ -19,12 +19,19 @@ REPLACEMENTS = {
     'smb://192.168.92.20/': 'G:\\'
 }
 
+db = DB('mymusic32')
+
 ####################################
+
+def change_album_id(old_id, new_id):
+    for table in ['album', 'albuminfo', 'album_artist', 'album_genre', 'song']:
+        sql = 'update {table} set idAlbum={new} where idAlbum={old};'
+        db.perform_sql(sql.format(table=table, new=new_id, old=old_id))
+    sql = 'update {table} set media_id={new} where media_id={old} and media_type="album";'
+    db.perform_sql(sql.format(table='art', new=new_id, old=old_id))
 
 
 def execute():
-    print 'Connecting to MySQL...'
-    db = DB('mymusic32')
     print 'Loading data...'
     paths = db.perform_sql('select distinct(strPath) from songview;')
     print 'Scanning dirs...'
@@ -55,13 +62,7 @@ def execute():
         except AssertionError:
             print 'Multiple album IDs for media in {0}'.format(strPath)
             continue
-        for table in ['album', 'albuminfo', 'album_artist', 'album_genre', 'song']:
-            sql = 'update {table} set idAlbum={new} where idAlbum={old};'
-            db.perform_sql(sql.format(table=table, new=new_id,
-                                      old=strPath_album_ids[0]))
-        sql = 'update {table} set media_id={new} where media_id={old} and media_type="album";'
-        db.perform_sql(sql.format(table='art', new=new_id,
-                                  old=strPath_album_ids[0]))
+        change_album_id(strPath_album_ids[0], new_id)
         if i % 100 == 0:
             print 'Processed {0} of {1} albums'.format(i, len(dirs))
     db.perform_sql('alter table album auto_increment={0};'.format(i+start_id+1))
