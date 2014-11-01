@@ -7,7 +7,7 @@ from db import DB
 
 ####################################
 
-EXCLUDE = ['directories_to_exclude']
+EXCLUDE = [] # subdirectories to exclude
 
 REPLACEMENTS = {
     # Escaped list of replacements for the path string. 
@@ -19,19 +19,27 @@ REPLACEMENTS = {
     'smb://192.168.92.20/': 'G:\\'
 }
 
-db = DB('mymusic32')
+db = DB('mymusic46')
 
 ####################################
 
 def change_album_id(old_id, new_id):
-    for table in ['album', 'albuminfo', 'album_artist', 'album_genre', 'song']:
-        sql = 'update {table} set idAlbum={new} where idAlbum={old};'
-        db.perform_sql(sql.format(table=table, new=new_id, old=old_id))
-    sql = 'update {table} set media_id={new} where media_id={old} and media_type="album";'
+    tables = {
+        'album': 'idAlbum',
+        'album_artist': 'idAlbum',
+        'album_genre': 'idAlbum',
+        'albuminfosong': 'idAlbumInfo',
+        'song': 'idAlbum'
+    }
+    for table, column in tables.iteritems():
+        sql = 'update {table} set {column}={new} where {column}={old};'
+        db.perform_sql(
+            sql.format(table=table, column=column, new=new_id, old=old_id))
+    sql = 'update art set media_id={new} where media_id={old} and media_type="album";'
     db.perform_sql(sql.format(table='art', new=new_id, old=old_id))
 
 
-def execute():
+def fix_recently_added():
     print 'Loading data...'
     paths = db.perform_sql('select distinct(strPath) from songview;')
     print 'Scanning dirs...'
@@ -70,4 +78,4 @@ def execute():
 
 
 if __name__ == '__main__':
-    execute()
+    fix_recently_added()
