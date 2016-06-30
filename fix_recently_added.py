@@ -16,10 +16,10 @@ REPLACEMENTS = {
     # directory and get its creation date.
     #
     # If your XBMC is not accessing files over a share, remove the next line.
-    'smb://192.168.92.20/': 'G:\\'
+    'smb://192.168.92.20/': '/mnt/G/'
 }
 
-db = DB('mymusic56')
+db = DB('MyMusic56')
 
 ####################################
 
