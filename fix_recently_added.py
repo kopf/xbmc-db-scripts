@@ -10,7 +10,7 @@ from db import DB
 EXCLUDE = [] # subdirectories to exclude
 
 REPLACEMENTS = {
-    # Escaped list of replacements for the path string. 
+    # Escaped list of replacements for the path string.
     # Necessary if your files are shared over SMB or some other network share,
     # so that this script can figure out the local filesystem location of the
     # directory and get its creation date.
@@ -37,6 +37,12 @@ def change_album_id(old_id, new_id):
             sql.format(table=table, column=column, new=new_id, old=old_id))
     sql = 'update art set media_id={new} where media_id={old} and media_type="album";'
     db.perform_sql(sql.format(table='art', new=new_id, old=old_id))
+
+
+def update_dateadded(album_id, timestamp):
+    date_added = datetime.datetime.fromtimestamp(timestamp).isoformat().replace('T', ' ')
+    sql = 'update song set dateAdded={date_added} where idAlbum={album_id};'
+    db.perform_sql(sql.format(album_id=album_id, date_added=date_added))
 
 
 def fix_recently_added():
@@ -70,6 +76,7 @@ def fix_recently_added():
         except AssertionError:
             print 'Multiple album IDs for media in {0}'.format(strPath)
             continue
+        update_dateadded(strPath_album_ids[0], directory['time'])
         change_album_id(strPath_album_ids[0], new_id)
         if i % 100 == 0:
             print 'Processed {0} of {1} albums'.format(i, len(dirs))
