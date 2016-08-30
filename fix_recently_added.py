@@ -54,11 +54,16 @@ def fix_recently_added():
         for key, value in REPLACEMENTS.iteritems():
             local_path = path.replace(key, value)
         if not any(directory in path for directory in EXCLUDE):
-            # Take the date of the oldest file in the dir, since
-            # we can't rely on the date of the directory itself
-            # (OS X might've added a fucking .DS_Store over sshfs or something)
-            dirs.append({'time': min([os.path.getctime(os.path.join(local_path, filename)) for filename in os.listdir(local_path)]),
-                         'orig_path': path})
+            # TODO: use mysqldb properly (instead of low-level _mysql) in db,
+            # so we can handle unicode and don't have to use a try-except here
+            try:
+                # Take the date of the oldest file in the dir, since
+                # we can't rely on the date of the directory itself
+                # (OS X might've added a fucking .DS_Store over sshfs or something)
+                dirs.append({'time': min([os.path.getctime(os.path.join(local_path, filename)) for filename in os.listdir(local_path)]),
+                             'orig_path': path})
+            except:
+                pass
     dirs = sorted(dirs, key=lambda k: k['time'])
 
     i = 0
