@@ -54,11 +54,11 @@ def fix_recently_added():
         for key, value in REPLACEMENTS.iteritems():
             local_path = path.replace(key, value)
         if not any(directory in path for directory in EXCLUDE):
-            try:
-                dirs.append({'time': os.path.getctime(local_path),
-                             'orig_path': path})
-            except Exception:
-                pass
+            # Take the date of the oldest file in the dir, since
+            # we can't rely on the date of the directory itself
+            # (OS X might've added a fucking .DS_Store over sshfs or something)
+            dirs.append({'time': min([os.path.getctime(os.path.join(local_path, filename)) for filename in os.listdir(local_path)]),
+                         'orig_path': path})
     dirs = sorted(dirs, key=lambda k: k['time'])
 
     i = 0
