@@ -41,7 +41,7 @@ def change_album_id(old_id, new_id):
 
 def update_dateadded(album_id, timestamp):
     date_added = datetime.datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
-    sql = 'update song set dateAdded={date_added} where idAlbum={album_id};'
+    sql = 'update song set dateAdded="{date_added}" where idAlbum={album_id};'
     db.perform_sql(sql.format(album_id=album_id, date_added=date_added))
 
 
