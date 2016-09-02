@@ -60,7 +60,7 @@ def fix_recently_added():
                 # Take the date of the oldest file in the dir, since
                 # we can't rely on the date of the directory itself
                 # (OS X might've added a fucking .DS_Store over sshfs or something)
-                dirs.append({'time': min([os.path.getctime(os.path.join(local_path, filename)) for filename in os.listdir(local_path)]),
+                dirs.append({'time': min([os.path.getmtime(os.path.join(local_path, filename)) for filename in os.listdir(local_path)]),
                              'orig_path': path})
             except:
                 pass
