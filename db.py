@@ -19,7 +19,7 @@ class DB(object):
         self.db = MySQLdb.connect(
             user=USERNAME, passwd=PASSWORD, db=db_name, host=HOST,
             use_unicode=True, charset='utf8')
-        self.c = db.cursor()
+        self.c = self.db.cursor()
 
     def perform_sql(self, sql, full_row=False):
         r = self.c.execute(sql)
