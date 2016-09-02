@@ -86,5 +86,18 @@ def fix_recently_added():
     print 'Done!'
 
 
+def compact_ids():
+    print "Compacting IDs..."
+    ids = sorted(list(set(db.perform_sql('SELECT idAlbum from songview ORDER BY idAlbum;'))))
+    i = 0
+    for old_id in ids:
+        i += 1
+        change_album_id(old_id, i)
+        if i % 100 == 0:
+            print 'Processed {0} of {1} albums'.format(i, len(ids))
+    db.perform_sql('alter table album auto_increment={0};'.format(i+1))
+
 if __name__ == '__main__':
     fix_recently_added()
+    if 'compact' in sys.argv:
+        compact_ids()
