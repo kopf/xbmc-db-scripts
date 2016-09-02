@@ -54,16 +54,11 @@ def fix_recently_added():
         for key, value in REPLACEMENTS.iteritems():
             local_path = path.replace(key, value)
         if not any(directory in path for directory in EXCLUDE):
-            # TODO: use mysqldb properly (instead of low-level _mysql) in db,
-            # so we can handle unicode and don't have to use a try-except here
-            try:
-                # Take the date of the oldest file in the dir, since
-                # we can't rely on the date of the directory itself
-                # (OS X might've added a fucking .DS_Store over sshfs or something)
-                dirs.append({'time': min([os.path.getmtime(os.path.join(local_path, filename)) for filename in os.listdir(local_path)]),
-                             'orig_path': path})
-            except:
-                pass
+            # Take the date of the oldest file in the dir, since
+            # we can't rely on the date of the directory itself
+            # (OS X might've added a fucking .DS_Store over sshfs or something)
+            dirs.append({'time': min([os.path.getmtime(os.path.join(local_path, filename)) for filename in os.listdir(local_path)]),
+                         'orig_path': path})
     dirs = sorted(dirs, key=lambda k: k['time'])
 
     i = 0
@@ -73,7 +68,7 @@ def fix_recently_added():
     for directory in dirs:
         i += 1
         new_id = start_id + i
-        strPath = db.escape_string(directory['orig_path'])
+        strPath = db.escape_string(directory['orig_path'].encode('utf-8'))
         sql = 'select idAlbum from songview where strPath="{0}";'
         strPath_album_ids = db.perform_sql(sql.format(strPath))
         try:
