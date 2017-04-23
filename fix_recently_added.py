@@ -19,7 +19,7 @@ REPLACEMENTS = {
     'smb://192.168.92.20/': '/mnt/G/'
 }
 
-db = DB('MyMusic56')
+db = DB('MyMusic60')
 
 ####################################
 
